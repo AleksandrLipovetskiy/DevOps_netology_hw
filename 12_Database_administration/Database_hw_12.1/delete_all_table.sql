@@ -1,0 +1,7 @@
+DROP TABLE IF EXISTS public.staff CASCADE;
+DROP TABLE IF EXISTS public.projects CASCADE;
+DROP TABLE IF EXISTS public.divisions CASCADE;
+DROP TABLE IF EXISTS public.types_divisions CASCADE;
+DROP TABLE IF EXISTS public.positions CASCADE;
+DROP TABLE IF EXISTS public.branch_address CASCADE;
+DROP TABLE IF EXISTS public.cities CASCADE;
