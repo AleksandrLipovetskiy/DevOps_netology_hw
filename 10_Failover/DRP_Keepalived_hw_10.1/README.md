@@ -33,5 +33,5 @@
 
 ![Изменение расширения файла index.html на правильное](10_Failover\DRP_Keepalived_hw_10.1\ChangHtml_2_back.png)
 
-![Результат в брацзере после возврата названия файла к правильному](10_Failover\DRP_Keepalived_hw_10.1\ChangHtml_2_back_br.png)
+![Результат в брацзере после возврата названия файла к правильному](./ChangHtml_2_back_br.png)
 
