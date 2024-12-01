@@ -11,7 +11,7 @@
 
 ### Задание 2
 
-[Вот ссылка на конфиг "игнора" из 2 задания](https://github.com/AleksandrLipovetskiy/gitlab-hw/blob/main/.gitignore)
+[Вот ссылка на конфиг "игнора" из 2 задания](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/8_Automation_CI_CD/Git_hw_8.1/.gitignore)
 
 ### Задание 3
 
