@@ -68,7 +68,7 @@
 ### ОТВЕТ на задание 2.
 
 Скриншот статуса сервиса mamcached.  
-![Скриншот статуса mamcached](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-02/stat_memcached.png)
+![Скриншот статуса mamcached](./stat_memcached.png)
 
 ## Задание 3. Удаление по TTL в Memcached
 Запишите в memcached несколько ключей с любыми именами и значениями, для которых выставлен TTL 5.
@@ -78,7 +78,7 @@
 ### ОТВЕТ на задание 3.
 
 Скриншот добавления ключей в memcached с ttl = 5 сек.  
-![Скриншот добавления ключей с ttl](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-02/add_key_memcached.png)
+![Скриншот добавления ключей с ttl](./add_key_memcached.png)
 
 ## Задание 4. Запись данных в Redis
 Запишите в Redis несколько ключей с любыми именами и значениями.
@@ -88,4 +88,4 @@
 ### ОТВЕТ на задание 4.
 
 Скриншот добавления ключей в redis.  
-![Скриншот добавления ключей в redis](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-02/add_key_redis.png)
+![Скриншот добавления ключей в redis](./add_key_redis.png)
