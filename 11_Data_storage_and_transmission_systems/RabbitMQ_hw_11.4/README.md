@@ -8,7 +8,7 @@
 ### ОТВЕТ на задание 1.
 
 Веб-интерфейс RabbitMQ
-![Веб-интерфейс RabbitMQ](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-26_00-16-18.png)
+![Веб-интерфейс RabbitMQ](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-26_00-16-18.png)
 
 ## Задание 2. Отправка и получение сообщений
 Используя приложенные скрипты, проведите тестовую отправку и получение сообщения. Для отправки сообщений необходимо запустить скрипт producer.py.
@@ -29,10 +29,10 @@ $ pip install pika
 ### ОТВЕТ на задание 2.
 
 Скриншот очереди "Hello".  
-![Скриншот очереди Hello](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-26_00-39-34.png)  
+![Скриншот очереди Hello](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-26_00-39-34.png)  
 
 Скриншот результата выполнения скрипта consumer.py.  
-![Скриншот результата выполнения скрипта consumer.py](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-26_00-43-26.png)  
+![Скриншот результата выполнения скрипта consumer.py](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-26_00-43-26.png)  
 
 ## Задание 3. Подготовка HA кластера  
 
@@ -72,20 +72,20 @@ $ rabbitmqadmin get queue='hello'
 Выполнял все в контейнерах Docker.
 
 Скриншот с информацией о доступных нодах.  
-![Скриншот с информацией о доступных нодах](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-30_21-33-12.png)
+![Скриншот с информацией о доступных нодах](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-30_21-33-12.png)
 
 Скриншот применения политики ha-all.  
-![Скриншот применения политики ha-all](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-30_22-54-16.png)
+![Скриншот применения политики ha-all](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-30_22-54-16.png)
 
 Файл с выводом команды rabbitmqctl cluster_status на ноде 1.  
-[Файл с выводом команды rabbitmqctl cluster_status1](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/stdout_rabbitctl_1.txt)
+[Файл с выводом команды rabbitmqctl cluster_status1](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/stdout_rabbitctl_1.txt)
 
 Файл с выводом команды rabbitmqctl cluster_status на ноде 2.  
-[Файл с выводом команды rabbitmqctl cluster_status2](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/stdout_rabbitctl_2.txt)
+[Файл с выводом команды rabbitmqctl cluster_status2](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/stdout_rabbitctl_2.txt)
 
 Скриншот с результатом работы скриптов produser.py и consumer.py
-![Скриншот с результатом работы скриптов produser.py и consumer.py](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-30_21-51-00.png)
+![Скриншот с результатом работы скриптов produser.py и consumer.py](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-30_21-51-00.png)
 
 Скриншот вывода команды rabbitmqadmin get queue='hello'
-![Скриншот вывода команды rabbitmqadmin get queue='hello'](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/11-04/2024-11-30_21-51-47.png)
+![Скриншот вывода команды rabbitmqadmin get queue='hello'](https://github.com/AleksandrLipovetskiy/sdb-hw-11/blob/main/RabbitMQ_hw_11.4/2024-11-30_21-51-47.png)
 
