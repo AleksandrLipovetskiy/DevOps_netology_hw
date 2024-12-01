@@ -2,15 +2,15 @@
 
 # Часть 2
 
-![Задание 1](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%201.png)
+![Задание 1](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%201.png)
 
-![Задание 2-3_1](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_1.png)
+![Задание 2-3_1](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_1.png)
 
-![Задание 2-3_2](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_2.png)
+![Задание 2-3_2](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_2.png)
 
-![Задание 2-3_3](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_3.png)
+![Задание 2-3_3](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%202-3_3.png)
 
-![Задание 4](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%204.png)
+![Задание 4](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%97%D0%B0%D0%B4%D0%B0%D0%BD%D0%B8%D0%B5%204.png)
 
 
 # Часть 1
@@ -78,13 +78,13 @@ ROOT
 
 Далее идут скриншоты. 
 
-![Авторизация в админке](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/Авторизация_в_админке.png)
+![Авторизация в админке](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/%D0%90%D0%B2%D1%82%D0%BE%D1%80%D0%B8%D0%B7%D0%B0%D1%86%D0%B8%D1%8F_%D0%B2_%D0%B0%D0%B4%D0%BC%D0%B8%D0%BD%D0%BA%D0%B5.png)
 
-![Configuration > Hosts](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/Configuration_Hosts.png)
+![Configuration > Hosts](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/Configuration_Hosts.png)
 
-![Лог zabbix agent](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/Log_zabbix_agent.png)
+![Лог zabbix agent](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/Log_zabbix_agent.png)
 
-![Monitoring > Latest data](https://github.com/AleksandrLipovetskiy/zabbix_hw/blob/main/Monitoring_Latest_data.png)
+![Monitoring > Latest data](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/blob/main/9_Monitoring/Zabbix_hw_9.3/Monitoring_Latest_data.png)
 
 
 
