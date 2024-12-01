@@ -1,0 +1,19 @@
+
+#cloud-config
+groups:
+  - admingroup: [root, user]
+  - cloud-users
+
+users:
+- name: vm-sam
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB98+cAoH66VOvy0Ryu4fmPNotoKpRne3gB2A3X3FzTD liipa@DESKTOP-5L4P3CD
+
+users:
+- name: vm-sam
+  sudo: ALL=(ALL) NOPASSWD:ALL
+  shell: /bin/bash
+  ssh_authorized_keys:
+  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILGQCzlz67wWttgoD6JMTLcGPdbqD/Jnh7KfuZSHgTop liipa@DESKTOP-5L4P3CD

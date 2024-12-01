@@ -1,0 +1,40 @@
+---
+# tasks file for install_nginx
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update_cache: yes
+  become: yes
+
+- name: Install Nginx
+  ansible.builtin.apt:
+    name: nginx
+    state: present
+  become: yes
+
+- name: Drop file "index.nginx-debian.html"
+  ansible.builtin.file:
+    path: /var/www/html/index.nginx-debian.html
+    state: absent
+
+- name: Copy files for Nginx configuration and website
+  ansible.builtin.copy:
+    src: "{{ item.src }}"
+    dest: "{{ item.dest }}"
+  with_items:
+    - { src: '~/.ansible/roles/install_nginx/files/default', dest: '/etc/nginx/sites-available/default' }
+    - { src: '~/.ansible/roles/install_nginx/files/index.html', dest: '/var/www/html/index.html' }
+    - { src: '~/.ansible/roles/install_nginx/files/logik.js', dest: '/var/www/html/logik.js' }
+    - { src: '~/.ansible/roles/install_nginx/files/style.css', dest: '/var/www/html/style.css' }
+
+- name: Restart Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: restarted
+
+- name: Start and enable Nginx
+  ansible.builtin.service:
+    name: nginx
+    state: started
+    enabled: yes
+  become: yes

@@ -1,0 +1,184 @@
+
+Terraform used the selected providers to generate the following execution
+plan. Resource actions are indicated with the following symbols:
+  [32m+[0m create[0m
+
+Terraform will perform the following actions:
+
+[1m  # yandex_compute_disk.sam-disk[0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_disk" "sam-disk" {
+      [32m+[0m[0m block_size  = 4096
+      [32m+[0m[0m created_at  = (known after apply)
+      [32m+[0m[0m folder_id   = (known after apply)
+      [32m+[0m[0m id          = (known after apply)
+      [32m+[0m[0m image_id    = "fd8gqkbp69nel2ibb5pr"
+      [32m+[0m[0m labels      = {
+          [32m+[0m[0m "structure" = "sam-netology"
+        }
+      [32m+[0m[0m name        = "sam-disk"
+      [32m+[0m[0m product_ids = (known after apply)
+      [32m+[0m[0m size        = 10
+      [32m+[0m[0m status      = (known after apply)
+      [32m+[0m[0m type        = "network-hdd"
+      [32m+[0m[0m zone        = (known after apply)
+
+      [32m+[0m[0m disk_placement_policy (known after apply)
+    }
+
+[1m  # yandex_compute_instance.sam-cpu[0m will be created
+[0m  [32m+[0m[0m resource "yandex_compute_instance" "sam-cpu" {
+      [32m+[0m[0m created_at                = (known after apply)
+      [32m+[0m[0m folder_id                 = (known after apply)
+      [32m+[0m[0m fqdn                      = (known after apply)
+      [32m+[0m[0m gpu_cluster_id            = (known after apply)
+      [32m+[0m[0m hostname                  = (known after apply)
+      [32m+[0m[0m id                        = (known after apply)
+      [32m+[0m[0m maintenance_grace_period  = (known after apply)
+      [32m+[0m[0m maintenance_policy        = (known after apply)
+      [32m+[0m[0m metadata                  = {
+          [32m+[0m[0m "user-data" = <<-EOT
+                #cloud-config
+                groups:
+                  - admingroup: [root, user]
+                  - cloud-users
+                
+                users:
+                - name: vm-sam
+                  sudo: ALL=(ALL) NOPASSWD:ALL
+                  shell: /bin/bash
+                  ssh_authorized_keys:
+                  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIB98+cAoH66VOvy0Ryu4fmPNotoKpRne3gB2A3X3FzTD liipa@DESKTOP-5L4P3CD
+                
+                users:
+                - name: vm-sam
+                  sudo: ALL=(ALL) NOPASSWD:ALL
+                  shell: /bin/bash
+                  ssh_authorized_keys:
+                  - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAILGQCzlz67wWttgoD6JMTLcGPdbqD/Jnh7KfuZSHgTop liipa@DESKTOP-5L4P3CD
+            EOT
+        }
+      [32m+[0m[0m name                      = "sam-cpu"
+      [32m+[0m[0m network_acceleration_type = "standard"
+      [32m+[0m[0m platform_id               = "standard-v1"
+      [32m+[0m[0m service_account_id        = (known after apply)
+      [32m+[0m[0m status                    = (known after apply)
+      [32m+[0m[0m zone                      = "ru-central1-a"
+
+      [32m+[0m[0m boot_disk {
+          [32m+[0m[0m auto_delete = true
+          [32m+[0m[0m device_name = (known after apply)
+          [32m+[0m[0m disk_id     = (known after apply)
+          [32m+[0m[0m mode        = (known after apply)
+
+          [32m+[0m[0m initialize_params (known after apply)
+        }
+
+      [32m+[0m[0m metadata_options (known after apply)
+
+      [32m+[0m[0m network_interface {
+          [32m+[0m[0m index              = (known after apply)
+          [32m+[0m[0m ip_address         = (known after apply)
+          [32m+[0m[0m ipv4               = true
+          [32m+[0m[0m ipv6               = (known after apply)
+          [32m+[0m[0m ipv6_address       = (known after apply)
+          [32m+[0m[0m mac_address        = (known after apply)
+          [32m+[0m[0m nat                = true
+          [32m+[0m[0m nat_ip_address     = (known after apply)
+          [32m+[0m[0m nat_ip_version     = (known after apply)
+          [32m+[0m[0m security_group_ids = (known after apply)
+          [32m+[0m[0m subnet_id          = "e9bk4g9i9mpvr2jdtvbu"
+        }
+
+      [32m+[0m[0m placement_policy (known after apply)
+
+      [32m+[0m[0m resources {
+          [32m+[0m[0m core_fraction = 100
+          [32m+[0m[0m cores         = 2
+          [32m+[0m[0m memory        = 2
+        }
+
+      [32m+[0m[0m scheduling_policy (known after apply)
+    }
+
+[1m  # yandex_vpc_address.sam-network[0m will be created
+[0m  [32m+[0m[0m resource "yandex_vpc_address" "sam-network" {
+      [32m+[0m[0m created_at          = (known after apply)
+      [32m+[0m[0m deletion_protection = (known after apply)
+      [32m+[0m[0m folder_id           = (known after apply)
+      [32m+[0m[0m id                  = (known after apply)
+      [32m+[0m[0m labels              = (known after apply)
+      [32m+[0m[0m name                = "sam-network"
+      [32m+[0m[0m reserved            = (known after apply)
+      [32m+[0m[0m used                = (known after apply)
+
+      [32m+[0m[0m external_ipv4_address {
+          [32m+[0m[0m address                  = (known after apply)
+          [32m+[0m[0m ddos_protection_provider = (known after apply)
+          [32m+[0m[0m outgoing_smtp_capability = (known after apply)
+          [32m+[0m[0m zone_id                  = "ru-central1-a"
+        }
+    }
+
+[1mPlan:[0m 3 to add, 0 to change, 0 to destroy.
+[0m
+Changes to Outputs:
+  [32m+[0m[0m external_ipv4_address = (known after apply)
+[0m[1myandex_vpc_address.sam-network: Creating...[0m[0m
+[0m[1myandex_compute_disk.sam-disk: Creating...[0m[0m
+[0m[1myandex_vpc_address.sam-network: Creation complete after 1s [id=e9bf4u05b4arn39rvhrq][0m
+[0m[1myandex_compute_disk.sam-disk: Still creating... [10s elapsed][0m[0m
+[0m[1myandex_compute_disk.sam-disk: Creation complete after 14s [id=fhmltunn13i24bkflj04][0m
+[0m[1myandex_compute_instance.sam-cpu: Creating...[0m[0m
+[0m[1myandex_compute_instance.sam-cpu: Still creating... [10s elapsed][0m[0m
+[0m[1myandex_compute_instance.sam-cpu: Creation complete after 20s [id=fhmsm39c7ku0p7br5gsm][0m
+[0m[1m[32m
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+[0m[0m[1m[32m
+Outputs:
+
+[0mexternal_ipv4_address = "89.169.145.85"
+Не удалось выполнить команду, попытка 1 из 3...
+Не удалось выполнить команду, попытка 2 из 3...
+OK
+
+PLAY [Setup and configure Nginx web server] ************************************
+
+TASK [Gathering Facts] *********************************************************
+ok: [89.169.145.85]
+
+TASK [install_nginx : Update apt cache] ****************************************
+changed: [89.169.145.85]
+
+TASK [install_nginx : Install Nginx] *******************************************
+changed: [89.169.145.85]
+
+TASK [install_nginx : Drop file "index.nginx-debian.html"] *********************
+changed: [89.169.145.85]
+
+TASK [install_nginx : Copy files for Nginx configuration and website] **********
+changed: [89.169.145.85] => (item={'src': '~/.ansible/roles/install_nginx/files/default', 'dest': '/etc/nginx/sites-available/default'})
+changed: [89.169.145.85] => (item={'src': '~/.ansible/roles/install_nginx/files/index.html', 'dest': '/var/www/html/index.html'})
+changed: [89.169.145.85] => (item={'src': '~/.ansible/roles/install_nginx/files/logik.js', 'dest': '/var/www/html/logik.js'})
+changed: [89.169.145.85] => (item={'src': '~/.ansible/roles/install_nginx/files/style.css', 'dest': '/var/www/html/style.css'})
+
+TASK [install_nginx : Restart Nginx] *******************************************
+changed: [89.169.145.85]
+
+TASK [install_nginx : Start and enable Nginx] **********************************
+ok: [89.169.145.85]
+
+TASK [Check if the website is accessible] **************************************
+ok: [89.169.145.85]
+
+TASK [Ensure website returns status 200] ***************************************
+ok: [89.169.145.85] => {
+    "msg": "Website is accessible"
+}
+
+TASK [Fail if website is not accessible] ***************************************
+skipping: [89.169.145.85]
+
+PLAY RECAP *********************************************************************
+89.169.145.85              : ok=9    changed=5    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+Скрипт завершён.

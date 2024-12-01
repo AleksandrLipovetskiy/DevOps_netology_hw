@@ -1,0 +1,22 @@
+---
+- name: Setup and configure Nginx web server
+  hosts: all
+  become: yes
+  roles:
+    - install_nginx
+  tasks:
+    - name: Check if the website is accessible
+      uri:
+        url: "http://{{ ansible_host }}:8080"
+        return_content: no
+      register: result
+
+    - name: Ensure website returns status 200
+      debug:
+        msg: "Website is accessible"
+      when: result.status == 200
+
+    - name: Fail if website is not accessible
+      fail:
+        msg: "Website is not accessible. Status code: {{ result.status }}"
+      when: result.status != 200
