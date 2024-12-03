@@ -1,8 +1,8 @@
-# Домашнее задание к занятию «Работа с данными (DDL/DML)» - Липовецкий Александр
+# Домашнее задание к занятию «Работа с данными (DDL/DML)» - Липовецкий Александр  
+  
+Задание можно выполнить как в любом IDE, так и в командной строке.  
 
-Задание можно выполнить как в любом IDE, так и в командной строке.
-
-## Задание 1  
+## Задание 1   
 
 1.1. Поднимите чистый инстанс MySQL версии 8.0+. Можно использовать локальный сервер или контейнер Docker.
 
@@ -27,50 +27,62 @@ ALTER USER 'sys_test'@'localhost' IDENTIFIED WITH mysql_native_password BY 'pass
 
 Результатом работы должны быть скриншоты обозначенных заданий, а также простыня со всеми запросами.
 
-### Ответ на задание 2.
+### Ответ на задание 1.  
 
-Команды:
-sudo apt update
-sudo apt upgrade
-sudo apt install mysql-server
-sudo systemctl status mysql
-mysql --version
-sudo mysql_secure_installation
-sudo mysql
-mysql -u root -p
-ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'my_password';
-FLUSH PRIVILEGES;
-SELECT user,authentication_string,plugin,host FROM mysql.user;
-exit;
-mysql -u root -p
-CREATE USER 'sys_temp'@'localhost' IDENTIFIED BY 'password';
-SELECT user,authentication_string,plugin,host FROM mysql.user;
-GRANT ALL PRIVILEGES ON *.* TO 'sys_temp@'localhost';
-FLUSH PRIVILEGES;
-SHOW GRANTS FOR 'sys_temp'@'localhost';
-CREATE DATABASE sakila;
-exit
-cd ./sakila-db/sakila-db
-mysql -u sys_temp -p sakila < sakila-schema.sql
-mysql -u sys_temp -p sakila < sakila-data.sql 
-mysql -u root -p
-USE sakila;
-SHOW TABLES;
-SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'sakila' AND CONSTRAINT_NAME = 'PRIMARY';
-exit;
+Команды:  
+sudo apt update  
+sudo apt upgrade  
+sudo apt install mysql-server  
+sudo systemctl status mysql  
+mysql --version  
+sudo mysql_secure_installation  
+sudo mysql  
+mysql -u root -p  
+ALTER USER 'root'@'localhost' IDENTIFIED WITH caching_sha2_password BY 'my_password';  
+FLUSH PRIVILEGES;  
+SELECT user,authentication_string,plugin,host FROM mysql.user;  
+exit  
+mysql -u root -p  
+CREATE USER 'sys_temp'@'localhost' IDENTIFIED BY 'password';   
+SELECT user,authentication_string,plugin,host FROM mysql.user;  
+GRANT ALL PRIVILEGES ON *.* TO 'sys_temp@'localhost';  
+FLUSH PRIVILEGES;  
+SHOW GRANTS FOR 'sys_temp'@'localhost';  
+exit  
+mysql -u sys_temp -p  
+ALTER USER 'sys_temp'@'localhost' IDENTIFIED WITH mysql_native_password BY 'password';  
+CREATE DATABASE sakila;  
+exit  
+cd ./sakila-db/sakila-db  
+mysql -u sys_temp -p sakila < sakila-schema.sql  
+mysql -u sys_temp -p sakila < sakila-data.sql   
+mysql -u root -p  
+USE sakila;  
+SHOW TABLES;  
+SELECT TABLE_NAME, COLUMN_NAME FROM information_schema.KEY_COLUMN_USAGE WHERE TABLE_SCHEMA = 'sakila' AND CONSTRAINT_NAME = 'PRIMARY';  
+exit  
 
-Скриншот списка пользователей в базе данных.
-![Скриншот списка пользователей в базе данных]()
+Скриншот списка пользователей в базе данных.  
+![Скриншот списка пользователей в базе данных](./users.png)  
 
-Скриншот списка прав для пользователя sys_temp.
-![Скриншот списка прав для пользователя sys_temp]()
+Скриншот списка прав для пользователя sys_temp.  
+![Скриншот списка прав для пользователя sys_temp](./grants.png)  
 
-Файл с таблицами и первичными ключами этих таблиц.  
-[Файл с таблицами и первичными ключами]()
+Скриншот списка таблиц восстановленной БД sakila.  
+![Скриншот списка таблиц восстановленной БД sakila](./tables.png)  
 
-## Задание 2  
+Скриншот ER-диаграммы.  
+![Скриншот ER-диаграммы](./ER_diag.png)  
+  
+  
+## Задание 2   
 
-Составьте таблицу, используя любой текстовый редактор или Excel, в которой должно быть два столбца: в первом должны быть названия таблиц восстановленной базы, во втором названия первичных ключей этих таблиц. Пример: (скриншот/текст)
+Составьте таблицу, используя любой текстовый редактор или Excel, в которой должно быть два столбца: в первом должны быть названия таблиц восстановленной базы, во втором названия первичных ключей этих таблиц. Пример: (скриншот/текст)  
 
-Название таблицы | Название первичного ключа
-customer         | customer_id
+Название таблицы | Название первичного ключа  
+customer         | customer_id  
+
+### Ответ на задание 2.  
+
+Файл с таблицами и первичными ключами этих таблиц.   
+[Файл с таблицами и первичными ключами](./colums_key.txt)  
