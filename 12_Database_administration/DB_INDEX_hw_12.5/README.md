@@ -99,13 +99,54 @@ CREATE INDEX idx_payment_date ON payment(payment_date);
 * Заменить неявные JOIN-ы на явные, чтобы улучшить читаемость и производительность.  
   
 ```SQL
-SELECT CONCAT(c.last_name, ' ', c.first_name) AS full_name,  
-SUM(p.amount) AS total_amount  
-FROM payment p  
-LEFT JOIN rental r ON p.payment_date = r.rental_date  
-LEFT JOIN customer c ON r.customer_id = c.customer_id  
-LEFT JOIN inventory i ON r.inventory_id = i.inventory_id  
-LEFT JOIN film f ON i.film_id = f.film_id  
-WHERE DATE(p.payment_date) = '2005-07-30'  
-GROUP BY full_name;  
+SELECT CONCAT(c.last_name, ' ', c.first_name) AS full_name,
+SUM(p.amount) AS total_amount
+FROM payment p
+LEFT JOIN rental r ON p.payment_date = r.rental_date
+LEFT JOIN customer c ON r.customer_id = c.customer_id
+LEFT JOIN inventory i ON r.inventory_id = i.inventory_id
+LEFT JOIN film f ON i.film_id = f.film_id
+WHERE p.payment_date >= '2005-07-30' and p.payment_date < DATE_ADD('2005-07-30', INTERVAL 1 DAY)
+GROUP BY full_name;
+```
+
+```SQL
+-> Table scan on <temporary>  (actual time=16.3..17.2 rows=391 loops=1)
+    -> Aggregate using temporary table  (actual time=16.3..16.3 rows=391 loops=1)
+        -> Nested loop left join  (cost=1638 rows=642) (actual time=0.476..15.2 rows=642 loops=1)
+            -> Nested loop left join  (cost=1413 rows=642) (actual time=0.471..14.1 rows=642 loops=1)
+                -> Nested loop left join  (cost=1189 rows=642) (actual time=0.469..10.4 rows=642 loops=1)
+                    -> Nested loop left join  (cost=964 rows=642) (actual time=0.463..5.48 rows=642 loops=1)
+                        -> Index range scan on p using idx_payment_date over ('2005-07-30 00:00:00' <= payment_date < '2005-07-31 00:00:00'), with index condition: ((p.payment_date >= TIMESTAMP'2005-07-30 00:00:00') and (p.payment_date < <cache>(('2005-07-30' + interval 1 day))))  (cost=286 rows=634) (actual time=0.454..3.39 rows=634 loops=1)
+                        -> Covering index lookup on r using rental_date (rental_date=p.payment_date)  (cost=0.969 rows=1.01) (actual time=0.00185..0.00255 rows=1.01 loops=634)
+                    -> Single-row index lookup on c using PRIMARY (customer_id=r.customer_id)  (cost=0.25 rows=1) (actual time=0.00435..0.00439 rows=1 loops=642)
+                -> Single-row index lookup on i using PRIMARY (inventory_id=r.inventory_id)  (cost=0.25 rows=1) (actual time=0.00542..0.00546 rows=1 loops=642)
+            -> Single-row covering index lookup on f using PRIMARY (film_id=i.film_id)  (cost=0.25 rows=1) (actual time=0.0013..0.00134 rows=1 loops=642)
+```
+
+```SQL
+SELECT CONCAT(c.last_name, ' ', c.first_name) AS full_name,
+SUM(p.amount) AS total_amount
+FROM payment p
+LEFT JOIN rental r ON p.payment_date = r.rental_date
+LEFT JOIN customer c ON r.customer_id = c.customer_id
+LEFT JOIN inventory i ON r.inventory_id = i.inventory_id
+LEFT JOIN film f ON i.film_id = f.film_id
+WHERE p.payment_date >= '2005-07-30 00:00:00' AND p.payment_date < '2005-07-31 00:00:00'
+GROUP BY full_name;
+```
+
+
+```SQL
+-> Table scan on <temporary>  (actual time=15.8..15.9 rows=391 loops=1)
+    -> Aggregate using temporary table  (actual time=15.8..15.8 rows=391 loops=1)
+        -> Nested loop left join  (cost=1638 rows=642) (actual time=1.6..13.6 rows=642 loops=1)
+            -> Nested loop left join  (cost=1413 rows=642) (actual time=1.6..12.6 rows=642 loops=1)
+                -> Nested loop left join  (cost=1189 rows=642) (actual time=1.59..8.57 rows=642 loops=1)
+                    -> Nested loop left join  (cost=964 rows=642) (actual time=1.59..5.32 rows=642 loops=1)
+                        -> Index range scan on p using idx_payment_date over ('2005-07-30 00:00:00' <= payment_date < '2005-07-31 00:00:00'), with index condition: ((p.payment_date >= TIMESTAMP'2005-07-30 00:00:00') and (p.payment_date < TIMESTAMP'2005-07-31 00:00:00'))  (cost=286 rows=634) (actual time=1.57..3.53 rows=634 loops=1)
+                        -> Covering index lookup on r using rental_date (rental_date=p.payment_date)  (cost=0.969 rows=1.01) (actual time=0.00184..0.00256 rows=1.01 loops=634)
+                    -> Single-row index lookup on c using PRIMARY (customer_id=r.customer_id)  (cost=0.25 rows=1) (actual time=0.00476..0.00479 rows=1 loops=642)
+                -> Single-row index lookup on i using PRIMARY (inventory_id=r.inventory_id)  (cost=0.25 rows=1) (actual time=0.00445..0.00449 rows=1 loops=642)
+            -> Single-row covering index lookup on f using PRIMARY (film_id=i.film_id)  (cost=0.25 rows=1) (actual time=0.00128..0.00132 rows=1 loops=642)
 ```
