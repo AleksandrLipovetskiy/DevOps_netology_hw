@@ -29,3 +29,7 @@
 13. Теперь можно сделать коммит git commit -m 'First commit'.  
   
 14. И ещё раз посмотреть выводы команд git status, git diff и git diff --staged.  
+
+## Ответ на задание 1
+
+Благодаря добавленному файлу .\terraform\.gitignore в будущем будут проигнорированы файлы: локальной директории .terraform, все файлы с расширением .tfstate и содержащие в названии .tfstate., логи аварийных ситуаций - crash.log, либо начинающиеся на crash. и заканчивающиеся на .log, файлы с переменными Terraform: с расширением .tfvars (*.tfvars), с расширением .tfvars.json (*.tfvars.json), файлы переопределения ресурсов: override.tf, override.tf.json, начинающиеся на override_ и заканчивающиеся на .tf (*_override.tf), начинающиеся на override_ и заканчивающиеся на .tf.json (*_override.tf.json), файл блокировки состояния Terraform: .terraform.tfstate.lock.info, конфигурационные файлы CLI для Terraform: .terraformrc, terraform.rc .  
