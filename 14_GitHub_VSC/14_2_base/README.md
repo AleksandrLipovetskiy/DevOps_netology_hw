@@ -1,4 +1,12 @@
-# Домашнее задание к занятию «Основы Git» - Липовецкий Александр
+# Домашнее задание к занятию «Основы Git» - Липовецкий Александр  
+  
+## Ответы на задания.  
+  
+Ссылка на GitHub  
+[GitHub](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/tree/develop/14_GitHub_VSC/14_2_base)  
+
+Ссылка на GitLab  
+[GitLab](https://gitlab.com/AleksandrLipovetskiy/devops_netology_hw/-/blob/develop/14_GitHub_VSC/14_2_base/README.md?ref_type=heads)  
 
 Уточнения по ходу выполнения задания:  
 1. Использовал не ветку main, а ветку develop, так как в ней выполняю все домашние задания до получения зачета.  
