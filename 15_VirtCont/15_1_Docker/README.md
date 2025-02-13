@@ -22,6 +22,12 @@ docker rename "aleksandrlipovetskiy-custom-nginx-t2" custom-nginx-t2
 
 ## Ответ на задание 3  
 
+Немного поехал скрин, первую команду укажу ниже, заметил только уже когда запушил на git.
+
+```bash
+docker attach custom-nginx-t2
+```  
+
 Выполненные команды:  
 ![Задание 3](./task_3_1.png)   
 
