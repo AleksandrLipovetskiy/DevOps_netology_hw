@@ -78,4 +78,8 @@ docker compose up -d
 ![Задание 5_6](./task_5_6.png)  
 
 
+Прилагаю файл compose.yaml  
+![Файл](./compose.yaml)  
+
+
 
