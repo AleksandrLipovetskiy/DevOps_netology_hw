@@ -79,7 +79,7 @@ docker compose up -d
 
 
 Прилагаю файл compose.yaml  
-![Файл](./compose.yaml)  
+[Файл](./compose.yaml)   
 
 
 
