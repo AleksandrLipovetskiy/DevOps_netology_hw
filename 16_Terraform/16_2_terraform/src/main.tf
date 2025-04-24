@@ -8,13 +8,14 @@ resource "yandex_vpc_subnet" "develop" {
   v4_cidr_blocks = var.default_cidr
 }
 
-
 data "yandex_compute_image" "ubuntu" {
   family = "${var.vm_web_image}"
 }
+
 resource "yandex_compute_instance" "platform" {
   name        = "${var.vm_web_name_platform}"
   platform_id = "${var.vm_web_platform_id}"
+  zone        = var.default_zone
   resources {
     cores         = 2
     memory        = 1
@@ -38,4 +39,32 @@ resource "yandex_compute_instance" "platform" {
     ssh-keys           = "${var.vm_web_user}:${var.vms_ssh_public_root_key}"
   }
 
+}
+
+resource "yandex_compute_instance" "db" {
+  name        = "${var.vm_db_name_platform}"
+  platform_id = "${var.vm_web_platform_id}"
+  zone        = var.b_zone
+  resources {
+    cores         = 2
+    memory        = 2
+    core_fraction = 20
+  }
+  boot_disk {
+    initialize_params {
+      image_id = data.yandex_compute_image.ubuntu.image_id
+    }
+  }
+  scheduling_policy {
+    preemptible = true
+  }
+  network_interface {
+    subnet_id = yandex_vpc_subnet.develop.id
+    nat       = true
+  }
+
+  metadata = {
+    serial-port-enable = 1
+    ssh-keys           = "${var.vm_web_user}:${var.vms_ssh_public_root_key}"
+  }
 }
