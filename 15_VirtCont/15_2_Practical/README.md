@@ -37,14 +37,14 @@ curl выводит IP адрес и время как указано в зад�
 ![Скрин4](./dive.PNG)  
 
 Скриншот docker save.  
-[Скрин5](./docker_save_terr.PNG)  
+![Скрин5](./docker_save_terr.PNG)  
 
 далее выполнил команду
 ```bash
 tar xf terraform.tar
-```
+```  
 Скриншот docker save2.  
-[Скрин6](./docker_save_terr2.PNG)  
+![Скрин6](./docker_save_terr2.PNG)  
 
 
 ## Ответ на задане 6.1  
@@ -54,8 +54,8 @@ tar xf terraform.tar
 docker create --name temp hashicorp/terraform:latest
 docker cp temp:/bin/terraform ./terraform
 docker rm temp
-```
-Скриншот выполнения.
-[Скрин6.1](./docker_cp.PNG)
+```  
+Скриншот выполнения.  
+![Скрин6.1](./docker_cp.PNG)  
 
 
