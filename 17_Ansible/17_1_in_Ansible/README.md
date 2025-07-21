@@ -5,8 +5,20 @@
 2. Создайте свой публичный репозиторий на GitHub с произвольным именем.  
 3. Скачайте Playbook из репозитория с домашним заданием и перенесите его в свой репозиторий.  
   
-Скриншот версии terraform:  
-![Скрин terraform --version](./1_terraform_ver.png)  
+Версия Ansible:  
+```bash
+am@sam-VB:~/GitHub/DevOps_netology_hw/17_Ansible/playbook$ ansible --version  
+ansible [core 2.16.3]  
+  config file = None  
+  configured module search path = ['/home/sam/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']  
+  ansible python module location = /usr/lib/python3/dist-packages/ansible  
+  ansible collection location = /home/sam/.ansible/collections:/usr/share/ansible/collections  
+  executable location = /usr/bin/ansible  
+  python version = 3.12.3 (main, Jun 18 2025, 17:59:45) [GCC 13.3.0] (/usr/bin/python3)  
+  jinja version = 3.1.2  
+  libyaml = True  
+sam@sam-VB:~/GitHub/DevOps_netology_hw/17_Ansible/playbook$  
+```
   
 ## Задание 1  
 1. Попробуйте запустить playbook на окружении из `test.yml`, зафиксируйте значение, которое имеет факт `some_fact` для указанного хоста при выполнении playbook.  
