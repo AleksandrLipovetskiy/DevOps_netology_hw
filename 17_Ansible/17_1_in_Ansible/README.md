@@ -45,7 +45,7 @@ ansible-playbook -i inventory/test.yml site.yml
 ![Скрин 1](./screenshot_1.png)  
   
 2.  
-В файле 17_Ansible/playbook/group_vars/all/examp.yml изменидл значение 12 на all default fact.  
+В файле 17_Ansible/playbook/group_vars/all/examp.yml изменил значение 12 на all default fact.  
   
 Скриншот выполнения команды  
 ``` bash
