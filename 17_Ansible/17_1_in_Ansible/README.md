@@ -7,7 +7,7 @@
   
 Версия Ansible:  
 ```bash
-am@sam-VB:~/GitHub/DevOps_netology_hw/17_Ansible/playbook$ ansible --version  
+sam@sam-VB:~/GitHub/DevOps_netology_hw/17_Ansible/playbook$ ansible --version  
 ansible [core 2.16.3]  
   config file = None  
   configured module search path = ['/home/sam/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']  
