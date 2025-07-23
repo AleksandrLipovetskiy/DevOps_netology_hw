@@ -1,0 +1,3 @@
+files/*
+.ssh
+# group_vars/vector/secret.yml
