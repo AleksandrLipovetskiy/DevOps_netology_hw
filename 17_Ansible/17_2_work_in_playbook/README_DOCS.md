@@ -4,8 +4,11 @@
 ### Системные требования  
 Плейбук разработан для локальной установки Clickhouse и Vector на дистрибутивах Linux с пакетным менеджером .deb (Ubuntu, Mint), архитектура amd64.   
   
-### Запуск командой - ansible-playbook -i inventory/prod.yml site.yml --diff --ask-become-pass --ask-vault-pass  
-  
+### Запуск командой - 
+```bash
+ansible-playbook -i inventory/prod.yml site.yml --diff --ask-become-pass --ask-vault-pass  
+```  
+    
 # Состав playbook:  
 ## Playbook   
 - [playbook](./playbook/site.yml)  
