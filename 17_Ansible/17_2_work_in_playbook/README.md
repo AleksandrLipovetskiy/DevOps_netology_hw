@@ -66,3 +66,6 @@
 9.  
 Файл документации: [README_DOCS](./README_DOCS.md)  
   
+10. 
+Ссылка на tag на фиксирующий коммит.  
+[ссылка на tag](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/releases/tag/08-ansible-02-playbook)  
