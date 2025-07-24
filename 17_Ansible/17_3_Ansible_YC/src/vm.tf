@@ -1,7 +1,7 @@
 resource "yandex_compute_instance" "wm" {
-  count = 2
+  count = var.vm_count
 
-  name        = "web-${count.index + 1}"
+  name        = "${var.vm_prefix}-${count.index + 1}"
   platform_id = var.instance_settings.platform_id
   zone        = var.default_zone
 
@@ -13,7 +13,7 @@ resource "yandex_compute_instance" "wm" {
 
   boot_disk {
     initialize_params {
-      image_id = data.yandex_compute_image.ubuntu.image_id
+      image_id = data.yandex_compute_image.centos-7.image_id
       size     = var.instance_settings.hdd_size
       type     = var.instance_settings.hdd_type
     }
@@ -30,6 +30,6 @@ resource "yandex_compute_instance" "wm" {
   }
 
   metadata = {
-    ssh-keys = "ubuntu:${file("~/.ssh/id_ed25519.pub")}"
+    ssh-keys = "centos:${file("~/.ssh/id_ed25519.pub")}"
   }
 }

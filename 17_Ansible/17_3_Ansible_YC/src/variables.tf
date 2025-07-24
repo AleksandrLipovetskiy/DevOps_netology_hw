@@ -31,8 +31,9 @@ variable "vpc_name" {
   description = "VPC network&subnet name"
 }
 
-data "yandex_compute_image" "ubuntu" {
-  family = "ubuntu-2204-lts" 
+data "yandex_compute_image" "centos-7" {
+  family = "centos-7"
+  image  = "fd8nsmhrlgp168q6h6aa"
 }
 
 variable "instance_settings" {
@@ -50,7 +51,7 @@ variable "instance_settings" {
     platform_id   = "standard-v3",
     core_count    = 2,
     core_fraction = 20,
-    memory_count  = 2,
+    memory_count  = 4,
     hdd_size      = 10,
     hdd_type      = "network-hdd",
     preemptible   = true,
@@ -65,7 +66,7 @@ variable "vm_count" {
 
 variable "vm_prefix" {
   type    = string
-  default = "vm"
+  default = "vm-sam"
 }
 
 variable "subnet_name" {
@@ -98,4 +99,10 @@ variable "ssh_private_key_path" {
 # Read the SSH public key from the file
 data "local_file" "ssh_public_key" {
   filename = var.ssh_public_key_path
+}
+
+# Define hostnames for each VM
+variable "hostnames" {
+  type    = list(string)
+  default = ["clickhouse", "vector", "lighthouse"]
 }
