@@ -79,11 +79,6 @@ variable "vpc_name" {
   default = "my-vpc"
 }
 
-variable "image_family" {
-  type    = string
-  default = "ubuntu-2004-lts" # Используйте актуальную версию Ubuntu
-}
-
 variable "ssh_public_key_path" {
   type        = string
   description = "Path to the SSH public key"
