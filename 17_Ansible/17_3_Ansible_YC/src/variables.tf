@@ -58,63 +58,44 @@ variable "instance_settings" {
   }
 }
 
-variable "each_vm" {
-  type = list(object({
-    vm_name       = string
-    cpu           = number
-    ram           = number
-    disk_volume   = number
-    core_fraction = number
-    platform_id   = string
-    disk_type     = string
-    preemptible   = bool
-    nat           = bool
-    zone          = string
-  }))
-  default = [
-    {
-      vm_name       = "main"
-      cpu           = 4
-      ram           = 4
-      disk_volume   = 15
-      core_fraction = 50
-      platform_id   = "standard-v3"
-      disk_type     = "network-ssd"
-      preemptible   = false
-      nat           = true
-      zone          = "ru-central1-a"
-    },
-    {
-      vm_name       = "replica"
-      cpu           = 2
-      ram           = 4
-      disk_volume   = 10
-      core_fraction = 20
-      platform_id   = "standard-v3"
-      disk_type     = "network-hdd"
-      preemptible   = true
-      nat           = true
-      zone          = "ru-central1-a"
-    }
-  ]
-  description = "Settings for database VMs (main and replica)"
+variable "vm_count" {
+  type    = number
+  default = 3
 }
 
-variable "storage_disk" {
-  type = object({
-    name = string
-    type = string
-    size = number
-  })
-  default = {
-    name = "storage_disk"
-    size = 1
-    type = "network-hdd"
-  }
+variable "vm_prefix" {
+  type    = string
+  default = "vm"
 }
 
-variable "vm_storage_settings" {
+variable "subnet_name" {
+  type    = string
+  default = "my-subnet"
+}
+
+variable "vpc_name" {
+  type    = string
+  default = "my-vpc"
+}
+
+variable "image_family" {
+  type    = string
+  default = "ubuntu-2004-lts" # Используйте актуальную версию Ubuntu
+}
+
+variable "ssh_public_key_path" {
   type        = string
-  default     = "storage-vm"
-  description = "Settings for storage vm"
+  description = "Path to the SSH public key"
+  default     = "~/.ssh/id_rsa.pub" # Default path, change if needed
+}
+
+variable "ssh_private_key_path" {
+  type        = string
+  description = "Path to the SSH private key for Ansible"
+  default     = "~/.ssh/id_rsa" # Default path, change if needed
+}
+
+# Read the SSH public key from the file
+data "local_file" "ssh_public_key" {
+  filename = var.ssh_public_key_path
 }
