@@ -1,6 +1,7 @@
 ###cloud vars
 variable "token" {
   type        = string
+  sensitive   = true
   description = "OAuth-token; https://cloud.yandex.ru/docs/iam/concepts/authorization/oauth-token"
 }
 
