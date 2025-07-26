@@ -22,5 +22,5 @@ resource "local_file" "ansible_inventory" {
       }
     ]
   })
-  filename = "${path.module}/../inventory.yml"
+  filename = "${path.module}/../playbook/inventory/prod.yml"
 }
