@@ -1,23 +1,29 @@
 all:
   children:
-    web:
+    vector:
       hosts:
 %{ for vm in web_vms ~}
         ${vm.name}:
           ansible_host: ${vm.network_interface[0].nat_ip_address}
           fqdn: ${vm.fqdn}
+          ansible_user: ${ansible_user}
+          ansible_ssh_private_key_file: ${ansible_private_key_file}
 %{ endfor ~}
-    mon:
+    lighthouse:
       hosts:
 %{ for vm in mon_vms ~}
         ${vm.name}:
           ansible_host: ${vm.network_interface[0].nat_ip_address}
           fqdn: ${vm.fqdn}
+          ansible_user: ${ansible_user}
+          ansible_ssh_private_key_file: ${ansible_private_key_file}
 %{ endfor ~}
-    db:
+    clickhouse:
       hosts:
 %{ for vm in db_vms ~}
         ${vm.name}:
           ansible_host: ${vm.network_interface[0].nat_ip_address}
           fqdn: ${vm.fqdn}
+          ansible_user: ${ansible_user}
+          ansible_ssh_private_key_file: ${ansible_private_key_file}
 %{ endfor ~}
