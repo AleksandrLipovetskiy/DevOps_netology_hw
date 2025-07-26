@@ -30,7 +30,7 @@ ansible-playbook -i inventory/prod.yml site.yml --diff --ask-become-pass --ask-v
 │ ├── lighthouse/  
 │ │ └── vars.yml  
 │ └── vector/  
-│   ├── secret.yml  
+│   ├── secret.yml  - зашифрован и хранит сведения для доступа к приватному хранилищу
 │   └── vars.yml  
 ├── inventory/  
 │ └── prod.yml  
@@ -153,7 +153,7 @@ vector: web- c префиксом в зависимости от колличе�
   
 1. **Download Vector DEB package**  
    Загружает DEB-пакет Vector с приватного URL с указанием учётных данных.  
-   В плейбуке имеется альтернативная, закомментированная версия загрузки с публичного канала.  
+   В плейбуке имеется альтернативная, закомментированная версия загрузки с публичного канала. Прииспользовании этой версии файл secret.yml не требуется.    
   
 2. **Install Vector DEB package**  
    Устанавливает загруженный DEB-пакет.  
