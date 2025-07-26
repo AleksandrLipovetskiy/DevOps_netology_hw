@@ -4,6 +4,7 @@
   become: true  
   become_method: sudo
   tags: nginx
+  nginx_user_name: root
 
   handlers:
     - name: Start Nginx
