@@ -1,5 +1,5 @@
 resource "local_file" "ansible_inventory" {
-  content = templatefile("${path.module}/../inventory.tftpl", {
+  content = templatefile("${path.module}/inventory.tftpl", {
     web_vms = [
       for vm in yandex_compute_instance.web : {
         name = vm.name
