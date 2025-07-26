@@ -30,7 +30,7 @@ ansible-playbook -i inventory/prod.yml site.yml --diff --ask-become-pass --ask-v
 │ ├── lighthouse/  
 │ │ └── vars.yml  
 │ └── vector/  
-│   ├── secret.yml  - зашифрован и хранит сведения для доступа к приватному хранилищу
+│   ├── secret.yml  - зашифрован и хранит сведения для доступа к приватному хранилищу  
 │   └── vars.yml  
 ├── inventory/  
 │ └── prod.yml  
