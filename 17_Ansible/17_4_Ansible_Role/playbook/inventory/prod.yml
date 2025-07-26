@@ -1,0 +1,28 @@
+all:
+  children:
+    vector:
+      hosts:
+        web-1:
+          ansible_host: 51.250.89.181
+          fqdn: web-1.develop.internal
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: /home/sam/.ssh/id_ed25519
+    lighthouse:
+      hosts:
+        mon-1:
+          ansible_host: 89.169.147.129
+          fqdn: mon-1.develop.internal
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: /home/sam/.ssh/id_ed25519
+    clickhouse:
+      hosts:
+        main:
+          ansible_host: 51.250.73.87
+          fqdn: main.develop.internal
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: /home/sam/.ssh/id_ed25519
+        replica:
+          ansible_host: 51.250.86.1
+          fqdn: replica.develop.internal
+          ansible_user: ubuntu
+          ansible_ssh_private_key_file: /home/sam/.ssh/id_ed25519
