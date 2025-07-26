@@ -1,0 +1,73 @@
+---
+- name: Install and Configure Nginx on Ubuntu
+  hosts: lighthouse
+  become: true  
+  become_method: sudo
+  tags: nginx
+
+  handlers:
+    - name: Start Nginx
+      service:
+        name: nginx
+        state: restarted
+      listen: "nginx config changed"
+      ignore_errors: "{{ ansible_check_mode }}"
+
+    - name: Reload Nginx
+      service:
+        name: nginx
+        state: reloaded
+      listen: "nginx config updated"
+      ignore_errors: "{{ ansible_check_mode }}"
+
+  tasks:
+    - name: Update APT package cache
+      apt:
+        update_cache: yes
+      changed_when: false
+
+    - name: Install Nginx
+      apt:
+        name: nginx
+        state: present
+
+    - name: Copy Nginx configuration file
+      template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: "nginx config changed"
+
+- name: Install and Configure Lighthouse on Ubuntu
+  hosts: lighthouse
+  become: true
+  become_method: sudo
+  tags: lighthouse
+
+  pre_tasks:
+    - name: Install Dependencies for Lighthouse
+      apt:
+        name: git
+        state: present
+        update_cache: yes
+      changed_when: false
+
+  roles:
+    - lighthouse
+    
+- name: Install Clickhouse
+  hosts: clickhouse
+  become: true
+
+  roles:
+    - clickhouse
+    
+
+- name: Install and configure Vector
+  hosts: vector
+  become: true
+
+  roles:
+    - vector
