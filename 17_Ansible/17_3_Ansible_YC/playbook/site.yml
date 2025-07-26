@@ -1,4 +1,113 @@
 ---
+---
+- name: Install and Configure Nginx on Ubuntu
+  hosts: lighthouse
+  become: true
+  become_method: sudo
+  tags: nginx
+
+  handlers:
+    - name: Start Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      listen: "nginx config changed"
+
+    - name: Reload Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: reloaded
+      listen: "nginx config updated"
+
+  tasks:
+    - name: Update APT package cache
+      ansible.builtin.apt:
+        update_cache: yes      changed_when: false
+
+    - name: Install Nginx
+      ansible.builtin.apt:
+        name: nginx
+        state: present
+
+    - name: Copy Nginx configuration file
+      ansible.builtin.template:
+        src: templates/nginx.conf.j2
+        dest: /etc/nginx/nginx.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: "nginx config changed"
+
+---
+- name: Install and Configure Lighthouse on Ubuntu
+  hosts: lighthouse
+  become: true
+  become_method: sudo
+  tags: lighthouse
+
+  handlers:
+    - name: Restart Nginx
+      ansible.builtin.service:
+        name: nginx
+        state: restarted
+      listen: "nginx config changed"
+
+  pre_tasks:
+ - name: Install Dependencies for Lighthouse
+      ansible.builtin.apt:
+        name: git
+        state: present
+        update_cache: yes
+      changed_when: false
+
+  tasks:
+    - name: Create Lighthouse Directory
+      ansible.builtin.file:
+        path: /var/www/lighthouse
+        state: directory
+        recurse: yes
+        mode: '0755'
+        owner: www-data
+        group: www-data
+
+    - name: Add /var/www/lighthouse to Git Safe Directory
+      ansible.builtin.command:
+        cmd: git config --global --add safe.directory /var/www/lighthouse
+      environment:
+        HOME: "/root"
+      changed_when: false
+
+    - name: Reset Local Changes in Lighthouse Repository
+      ansible.builtin.command:
+        cmd: git reset --hard
+        chdir: /var/www/lighthouse
+      ignore_errors: yes
+      changed_when: false
+
+    - name: Clone Lighthouse Repository from Git
+      ansible.builtin.git:
+        repo: "{{ lighthouse_vcs }}"
+        dest: "{{ lighthouse_location_dir | default('/var/www/lighthouse') }}"
+        version: master
+        update: yes
+        force: yes
+
+    - name: Copy Lighthouse Nginx Configuration
+      ansible.builtin.template:
+        src: templates/lighthouse.conf.j2
+        dest: /etc/nginx/sites-available/lighthouse.conf
+        owner: root
+        group: root
+        mode: '0644'
+      notify: "nginx config changed"
+
+    - name: Enable Lighthouse Site in Nginx
+      ansible.builtin.file:
+        src: /etc/nginx/sites-available/lighthouse.conf
+        dest: /etc/nginx/sites-enabled/lighthouse.conf
+        state: link
+      notify: "nginx config changed"
+
 - name: Install Clickhouse
   hosts: clickhouse
   become: true
