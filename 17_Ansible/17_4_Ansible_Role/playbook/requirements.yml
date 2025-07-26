@@ -1,0 +1,14 @@
+---
+- name: lighthouse
+  src: 
+  scm: git
+  version: 0.0.1
+- name: clickhouse
+  src: 
+  scm: git
+  version: 0.0.1
+- name: vector
+  src: 
+  scm: git
+  version: 0.0.1
+
