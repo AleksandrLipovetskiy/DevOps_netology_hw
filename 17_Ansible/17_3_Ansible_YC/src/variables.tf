@@ -32,9 +32,8 @@ variable "vpc_name" {
   description = "VPC network&subnet name"
 }
 
-data "yandex_compute_image" "centos-7" {
-  family = "centos-7"
-  image  = "fd8nsmhrlgp168q6h6aa"
+data "yandex_compute_image" "ubuntu" {
+  family = "ubuntu-2404-lts"
 }
 
 variable "instance_settings" {
@@ -60,40 +59,44 @@ variable "instance_settings" {
   }
 }
 
-variable "vm_count" {
-  type    = number
-  default = 3
-}
-
-variable "vm_prefix" {
-  type    = string
-  default = "vm-sam"
-}
-
-variable "subnet_name" {
-  type    = string
-  default = "my-subnet"
-}
-
-variable "ssh_public_key_path" {
-  type        = string
-  description = "Path to the SSH public key"
-  default     = "~/.ssh/id_rsa.pub" # Default path, change if needed
-}
-
-variable "ssh_private_key_path" {
-  type        = string
-  description = "Path to the SSH private key for Ansible"
-  default     = "~/.ssh/id_rsa" # Default path, change if needed
-}
-
-# Read the SSH public key from the file
-data "local_file" "ssh_public_key" {
-  filename = var.ssh_public_key_path
-}
-
-# Define hostnames for each VM
-variable "hostnames" {
-  type    = list(string)
-  default = ["clickhouse", "vector", "lighthouse"]
+variable "each_db" {
+  type = list(object({
+    vm_name       = string
+    cpu           = number
+    ram           = number
+    disk_volume   = number
+    core_fraction = number
+    platform_id   = string
+    disk_type     = string
+    preemptible   = bool
+    nat           = bool
+    zone          = string
+  }))
+  default = [
+    {
+      vm_name       = "main"
+      cpu           = 4
+      ram           = 4
+      disk_volume   = 15
+      core_fraction = 50
+      platform_id   = "standard-v3"
+      disk_type     = "network-ssd"
+      preemptible   = false
+      nat           = true
+      zone          = "ru-central1-a"
+    },
+    {
+      vm_name       = "replica"
+      cpu           = 2
+      ram           = 4
+      disk_volume   = 10
+      core_fraction = 20
+      platform_id   = "standard-v3"
+      disk_type     = "network-hdd"
+      preemptible   = true
+      nat           = true
+      zone          = "ru-central1-a"
+    }
+  ]
+  description = "Settings for database VMs (main and replica)"
 }

@@ -1,14 +1,26 @@
 resource "local_file" "ansible_inventory" {
-  content = templatefile("${path}/inventory.j2", {
-    clickhouse_ip   = yandex_compute_instance.clickhouse.network_interface.0.nat_ip_address
-    vector_ip       = yandex_compute_instance.vector.network_interface.0.nat_ip_address
-    lighthouse_ip   = yandex_compute_instance.lighthouse.network_interface.0.nat_ip_address
+  content = templatefile("${path.module}/../inventory.tftpl", {
+    web_vms = [
+      for vm in yandex_compute_instance.web : {
+        name = vm.name
+        network_interface = vm.network_interface
+        fqdn = "${vm.name}.${var.vpc_name}.internal"
+      }
+    ]
+    db_vms = [
+      for vm in yandex_compute_instance.db : {
+        name = vm.name
+        network_interface = vm.network_interface
+        fqdn = "${vm.name}.${var.vpc_name}.internal"
+      }
+    ]
+    mon_vms = [
+      for vm in yandex_compute_instance.mon : {
+        name = vm.name
+        network_interface = vm.network_interface
+        fqdn = "${vm.name}.${var.vpc_name}.internal"
+      }
+    ]
   })
-  filename = "${path.module}/prod.yml"
-
-  depends_on = [
-    yandex_compute_instance.clickhouse,
-    yandex_compute_instance.vector,
-    yandex_compute_instance.lighthouse
-  ]
+  filename = "${path.module}/../inventory.yml"
 }
