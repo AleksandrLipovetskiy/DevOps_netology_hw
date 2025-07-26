@@ -1,14 +1,14 @@
 ---
 - name: lighthouse
-  src: 
+  src: git@github.com:AleksandrLipovetskiy/lighthouse-role.git
   scm: git
   version: 0.0.1
 - name: clickhouse
-  src: 
+  src: git@github.com:AleksandrLipovetskiy/clickhouse-role.git
   scm: git
   version: 0.0.1
 - name: vector
-  src: 
+  src: git@github.com:AleksandrLipovetskiy/vector-role.git
   scm: git
   version: 0.0.1
 
