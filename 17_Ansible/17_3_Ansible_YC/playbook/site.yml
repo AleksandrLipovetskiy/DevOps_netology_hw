@@ -110,7 +110,6 @@
         dest: /etc/nginx/sites-enabledighthouse.conf
         state: link
       notify: "nginx config changed"
-      ignore_errors: "{{ ansible_check_mode }}"
 
 - name: Install Clickhouse
   hosts: clickhouse
