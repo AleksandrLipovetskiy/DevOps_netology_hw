@@ -1,4 +1,10 @@
-# Install Clickhouse and Vector Ansible Playbook  
+# Домашнее задание к занятию «Использование Ansible" - Липовецкий Александр  
+  
+Ссылка на тег 08-ansible-03-yandex в моем репозитории.  
+![teg](https://github.com/AleksandrLipovetskiy/DevOps_netology_hw/releases/tag/08-ansible-03-yandex)  
+  
+# Документация по проекту - Install Clickhouse and Vector Ansible Playbook  
+  
 ## Плейбук для установки Clickhouse, Vector, Lighthouse, Nginx на операционных системах типа Linux, использующих пакетный менеджер на базе .deb  
   
 - ClickHouse — высокопроизводительная аналитическая СУБД.  
