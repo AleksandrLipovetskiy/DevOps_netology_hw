@@ -63,5 +63,5 @@ node_filesystem_size_bytes{mountpoint="/"}
   
 Файл с листингом JSON-содержимого дашборда.  
   
-[Листинг](./listing.txt) 
+[Листинг](./listing.md) 
   
