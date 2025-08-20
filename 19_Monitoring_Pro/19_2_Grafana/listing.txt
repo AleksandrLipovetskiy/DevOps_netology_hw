@@ -1,4 +1,4 @@
-```lson
+```json
 {
   "annotations": {
     "list": [
