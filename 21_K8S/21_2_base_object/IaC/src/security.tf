@@ -31,7 +31,6 @@ variable "security_group_ingress" {
   ]
 }
 
-
 variable "security_group_egress" {
   description = "secrules egress"
   type = list(object(

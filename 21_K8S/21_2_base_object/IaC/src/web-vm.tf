@@ -1,7 +1,7 @@
-resource "yandex_compute_instance" "microk8s_node" {
+resource "yandex_compute_instance" "web" {
   count = 1
 
-  name        = "microk8s_node-${count.index + 1}"
+  name        = "mk8s-${count.index + 1}"
   platform_id = var.instance_settings.platform_id
   zone        = var.default_zone
 

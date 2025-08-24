@@ -1,0 +1,68 @@
+#!/bin/bash
+
+set -e
+
+# Проверка и установка jq, если не установлен
+if ! command -v jq &> /dev/null; then
+  echo "jq не найден, устанавливаем..."
+  sudo apt-get update
+  sudo apt-get install -y jq
+else
+  echo "jq уже установлен"
+fi
+
+TF_DIR="./src"
+ANSIBLE_PLAYBOOK="./playbook/node.yml"
+ANSIBLE_INVENTORY="./playbook/inventory/prod.yml"
+ANSIBLE_CONFIG="./playbook/ansible.cfg"
+
+function terraform_apply() {
+  echo "Запуск terraform apply..."
+  terraform -chdir=$TF_DIR apply -auto-approve
+}
+
+function terraform_destroy() {
+  echo "Запуск terraform destroy..."
+  terraform -chdir=$TF_DIR destroy -auto-approve
+}
+
+function wait_for_hosts() {
+  echo "Получаем IP адреса из Ansible inventory..."
+  ips=$(ansible-inventory -i "$ANSIBLE_INVENTORY" --list | jq -r '._meta.hostvars[] | .ansible_host')
+
+  echo "Ожидание доступности хостов по SSH..."
+  for ip in $ips; do
+    echo "Проверка хоста $ip по SSH..."
+    until nc -z -w5 $ip 22; do
+      echo "Ожидание доступности $ip..."
+      sleep 10
+    done
+  done
+  echo "Все хосты доступны по SSH."
+}
+
+function run_ansible() {
+  if [ ! -f "$ANSIBLE_PLAYBOOK" ]; then
+    echo "Ansible playbook $ANSIBLE_PLAYBOOK не найден"
+    exit 1
+  fi
+  echo "Запуск ansible-playbook..."
+  export ANSIBLE_HOST_KEY_CHECKING=False
+  export ANSIBLE_CONFIG="$ANSIBLE_CONFIG"
+  ansible-playbook -i "$ANSIBLE_INVENTORY" "$ANSIBLE_PLAYBOOK"
+}
+
+case "$1" in
+  start)
+    terraform_apply
+    wait_for_hosts
+    run_ansible
+    ;;
+  down)
+    terraform_destroy
+    ;;
+  *)
+    echo "Использование: $0 {start|down}"
+    exit 1
+    ;;
+esac

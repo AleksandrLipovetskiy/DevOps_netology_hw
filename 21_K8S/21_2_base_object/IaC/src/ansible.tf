@@ -12,21 +12,7 @@ resource "local_file" "ansible_inventory" {
         fqdn = "${vm.name}.${var.vpc_name}.internal"
       }
     ]
-    db_vms = [
-      for vm in yandex_compute_instance.db : {
-        name = vm.name
-        network_interface = vm.network_interface
-        fqdn = "${vm.name}.${var.vpc_name}.internal"
-      }
-    ]
-    mon_vms = [
-      for vm in yandex_compute_instance.mon : {
-        name = vm.name
-        network_interface = vm.network_interface
-        fqdn = "${vm.name}.${var.vpc_name}.internal"
-      }
-    ]
-    
+        
     ansible_user             = local.ansible_user
     ansible_private_key_file = local.ansible_private_key_file
   })
