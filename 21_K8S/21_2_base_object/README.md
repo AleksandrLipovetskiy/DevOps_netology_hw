@@ -18,8 +18,7 @@
 # команда удаления  
 ./mk8s down  
 ```   
-Ссылка на манифест hello-world  
-[link1](./IaC/playbook/files/hello.yaml)  
+Ссылка на манифест [hello-world](./IaC/playbook/files/hello.yaml)  
   
 Скриншот вывода значения curl (так как удаленная машина на YC)  
   
@@ -36,13 +35,15 @@
   
 ## Ответ на задание 2  
   
-Ссылка на манифест netology-web   
-[link1](./IaC/playbook/files/netology_web.yaml)   
+Ссылка на манифест [netology-web](./IaC/playbook/files/netology_web.yaml)   
   
-Ссылка на манифест netology-svc 
-[link1](./IaC/playbook/files/service.yaml)  
+Ссылка на манифест [netology-svc](./IaC/playbook/files/service.yaml)  
+  
+Скриншот вывода команды kubectl get pods  
   
 ![Screen_5](./Screen_5.png)  
   
-![Screen_4](./Screen_4.png)  
+Скриншот вывода значения curl (так как удаленная машина на YC)  
   
+![Screen_4](./Screen_4.png)  
+   
