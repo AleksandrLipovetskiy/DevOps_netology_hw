@@ -28,6 +28,18 @@ variable "security_group_ingress" {
       v4_cidr_blocks = ["0.0.0.0/0"]
       port           = 443
     },
+    {
+      protocol       = "TCP"
+      description    = "Разрешить входящий трафик для MicroK8s Dashboard"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      port           = 30443  # или другой порт NodePort, если указан
+    },
+        {
+      protocol       = "TCP"
+      description    = "Разрешить входящий трафик для MicroK8s Dashboard"
+      v4_cidr_blocks = ["0.0.0.0/0"]
+      port           = 10443  # или другой порт Port-Forv, если указан
+    },
   ]
 }
 
