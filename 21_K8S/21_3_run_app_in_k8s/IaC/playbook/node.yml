@@ -1,0 +1,163 @@
+---
+- name: Установка и настройка MicroK8s
+  hosts: MicroK8S
+  become: yes
+
+  tasks:
+  - name: Обновление списка пакетов
+    apt:
+      update_cache: yes
+
+  - name: Установка snapd
+    apt:
+      name: snapd
+      state: present
+
+  - name: Установка MicroK8s через snap
+    snap:
+      name: microk8s
+      classic: yes
+      state: present
+
+  - name: Добавить пользователя в группу microk8s
+    user:
+      name: "{{ ansible_user }}"
+      groups: microk8s
+      append: yes
+
+  - name: Изменить владельца каталога ~/.kube
+    file:
+      path: "/home/{{ ansible_user }}/.kube"
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      recurse: yes
+
+  - name: Редактирование csr.conf.template для добавления IP из inventory в сертификат
+    lineinfile:
+      path: "{{ microk8s_certs_path }}"
+      insertbefore: '^#MOREIPS'
+      line: "IP.{{ 3 + item.0 }} = {{ item.1 }}"
+    with_indexed_items: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | list }}"
+    notify: Refresh microk8s certs
+
+  #- name: Включить dashboard
+  #  command: microk8s enable dashboard
+
+  - name: Проверить статус microk8s
+    command: microk8s status --wait-ready
+    register: microk8s_status
+    ignore_errors: yes
+
+  - name: Запустить microk8s если не запущен
+    command: microk8s start
+    when: microk8s_status.failed
+
+  #- name: Изменить сервис kubernetes-dashboard на NodePort с портом 30443
+  #  command: >
+  #    microk8s kubectl -n kube-system patch service kubernetes-dashboard
+  #    -p '{"spec": {"type": "NodePort", "ports": [{"port": 443, "targetPort": 443, "nodePort": 30443}]}}'
+  #  ignore_errors: yes
+
+  - name: Получить информацию о нодах в microk8s
+    command: microk8s kubectl get nodes
+    register: kubectl_nodes
+
+  - name: Показать статус нод
+    debug:
+      var: kubectl_nodes.stdout_lines
+
+  - name: Получить последнюю стабильную версию kubectl
+    shell: curl -s "{{ kubectl_download_url }}"
+    register: kubectl_version # получаем и добавляем в переменную строку с актуальной версией kubectl
+
+  - name: Скачать kubectl нужной версии
+    get_url:
+      url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
+      dest: /usr/local/bin/kubectl
+      mode: '0755'
+
+  - name: Создать скрипт автодополнения kubectl
+    shell: kubectl completion bash > "{{ kubectl_completion_script }}"
+
+  - name: Добавить автодополнение kubectl и экспорт KUBECONFIG в bashrc
+    blockinfile:
+      path: /home/{{ ansible_user }}/.bashrc
+      block: |
+        {{ kubectl_bashrc_entry }}
+        export KUBECONFIG=/var/snap/microk8s/current/credentials/client.config
+      create: yes
+      marker: "# {mark} ANSIBLE MANAGED BLOCK - kubectl setup"
+
+  # Запуск proxy kubernetes-dashboard не нужен, так как используется NodePort
+  #- name: Проброс порта для kubernetes-dashboard с доступом по сети
+  #  shell: microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
+  #  async: 10
+  #  poll: 0
+  #  ignore_errors: yes
+
+  #- name: Получить токен для доступа к Kubernetes Dashboard
+  #  command: microk8s kubectl create token default
+  #  register: dashboard_token
+
+  #- name: Отобразить токен и ссылку для доступа к Dashboard
+  #  debug:
+  #    msg: |
+  #      MicroK8s Dashboard token: {{ dashboard_token.stdout }}
+  #      Доступ к Dashboard по ссылке: https://{{ ansible_host }}:30443
+
+  - name: Копировать манифест my-deploy.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/my-deploy.yaml"
+      dest: /tmp/my-deploy.yaml
+      mode: '0644'
+
+  - name: Создать pod my-deploy из манифеста
+    command: microk8s kubectl apply -f /tmp/my-deploy.yaml
+
+  - name: Закомментировать несколько задач с помощью when
+    block:  
+      - name: Копировать манифест netology-web.yaml на MicroK8s
+        copy:
+          src: "{{ playbook_dir }}/files/netology_web.yaml"
+          dest: /tmp/netology_web.yaml
+          mode: '0644'
+
+      - name: Создать pod netology-web из манифеста
+        command: microk8s kubectl apply -f /tmp/netology_web.yaml
+
+      - name: Копировать манифест service.yaml на MicroK8s
+        copy:
+          src: "{{ playbook_dir }}/files/service.yaml"
+          dest: /tmp/service.yaml
+          mode: '0644'
+
+      - name: Создать pod netology-web из манифеста
+        command: microk8s kubectl apply -f /tmp/service.yaml
+    
+      - name: Остановить microk8s
+        command: sudo microk8s stop
+        become: yes
+
+      - name: Запустить microk8s
+        command: sudo microk8s start
+        become: yes
+    when: false
+
+  - name: Вывести команду для подключения по SSH к каждому хосту
+    debug:
+      msg: "ssh ubuntu@{{ ansible_host }}"
+
+  handlers:
+    - name: Refresh microk8s certs
+      command: microk8s refresh-certs --cert front-proxy-client.crt
+      register: refresh_result
+      changed_when: "'Created new certificates' in refresh_result.stdout"
+      notify: Wake up microk8s
+
+    - name: Wake up microk8s
+      command: snap set microk8s dummy="$(date)"
+      when: refresh_result is defined and refresh_result.changed
+    
+    # на подумать
+    - name: Restart microk8s
+      command: microk8s stop && microk8s start  
