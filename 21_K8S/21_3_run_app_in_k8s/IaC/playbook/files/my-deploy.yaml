@@ -5,7 +5,7 @@ metadata:
   labels:
     app: nginx
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: nginx
@@ -20,5 +20,7 @@ spec:
         ports:
         - containerPort: 80
       - name: multitool
-        image: busybox:latest
-        command: ["sleep", "3600"]
+        image: wbitt/network-multitool:latest
+        command: ["sleep", "infinity"]
+        ports:
+        - containerPort: 8080

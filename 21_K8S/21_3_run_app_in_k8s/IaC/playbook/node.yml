@@ -32,11 +32,19 @@
       group: "{{ ansible_user }}"
       recurse: yes
 
+  - name: Проверка наличия IP в файле без учета индекса
+    shell: grep -q "{{ item.1 }}" {{ microk8s_certs_path }}
+    register: ip_exists
+    failed_when: false
+    changed_when: false
+    with_indexed_items: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | list }}"
+
   - name: Редактирование csr.conf.template для добавления IP из inventory в сертификат
     lineinfile:
       path: "{{ microk8s_certs_path }}"
       insertbefore: '^#MOREIPS'
       line: "IP.{{ 3 + item.0 }} = {{ item.1 }}"
+    when: ip_exists.results[ item.0 ].rc != 0
     with_indexed_items: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | list }}"
     notify: Refresh microk8s certs
 
@@ -66,27 +74,38 @@
     debug:
       var: kubectl_nodes.stdout_lines
 
+  - name: Получить установленную версию kubectl
+    command: kubectl version --client --short
+    register: current_kubectl_version
+    failed_when: false
+    changed_when: false
+
   - name: Получить последнюю стабильную версию kubectl
-    shell: curl -s "{{ kubectl_download_url }}"
+    uri:
+      url: "{{ kubectl_download_url }}"
+      return_content: yes
     register: kubectl_version # получаем и добавляем в переменную строку с актуальной версией kubectl
+  
+  - name: Установить kubectl, если версия не совпадает с текущей
+    block:
+      - name: Скачать kubectl нужной версии
+        get_url:
+          url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl"
+          dest: /usr/local/bin/kubectl
+          mode: '0755'
 
-  - name: Скачать kubectl нужной версии
-    get_url:
-      url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.stdout }}/bin/linux/amd64/kubectl"
-      dest: /usr/local/bin/kubectl
-      mode: '0755'
+      - name: Создать скрипт автодополнения kubectl
+        shell: kubectl completion bash > "{{ kubectl_completion_script }}"
 
-  - name: Создать скрипт автодополнения kubectl
-    shell: kubectl completion bash > "{{ kubectl_completion_script }}"
-
-  - name: Добавить автодополнение kubectl и экспорт KUBECONFIG в bashrc
-    blockinfile:
-      path: /home/{{ ansible_user }}/.bashrc
-      block: |
-        {{ kubectl_bashrc_entry }}
-        export KUBECONFIG=/var/snap/microk8s/current/credentials/client.config
-      create: yes
-      marker: "# {mark} ANSIBLE MANAGED BLOCK - kubectl setup"
+      - name: Добавить автодополнение kubectl и экспорт KUBECONFIG в bashrc
+        blockinfile:
+          path: /home/{{ ansible_user }}/.bashrc
+          block: |
+            {{ kubectl_bashrc_entry }}
+            export KUBECONFIG=/var/snap/microk8s/current/credentials/client.config
+          create: yes
+          marker: "# {mark} ANSIBLE MANAGED BLOCK - kubectl setup"
+    when: "'Client Version: ' + (kubectl_version.content | trim) not in current_kubectl_version.stdout"
 
   # Запуск proxy kubernetes-dashboard не нужен, так как используется NodePort
   #- name: Проброс порта для kubernetes-dashboard с доступом по сети
@@ -114,26 +133,44 @@
   - name: Создать pod my-deploy из манифеста
     command: microk8s kubectl apply -f /tmp/my-deploy.yaml
 
+  - name: Копировать манифест my-service.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/my-service.yaml"
+      dest: /tmp/my-service.yaml
+      mode: '0644'
+
+  - name: Создать сервис my-service из манифеста
+    command: microk8s kubectl apply -f /tmp/my-service.yaml
+
+  - name: Копировать манифест multi-pod.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/multi-pod.yaml"
+      dest: /tmp/multi-pod.yaml
+      mode: '0644'
+
+  - name: Создать pod multi-pod из манифеста
+    command: microk8s kubectl apply -f /tmp/multi-pod.yaml
+
+  - name: Копировать манифест nginx-init.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/nginx-init.yaml"
+      dest: /tmp/nginx-init.yaml
+      mode: '0644'
+
+  - name: Создать pod nginx-init и namespace из манифеста
+    command: microk8s kubectl apply -f /tmp/nginx-init.yaml 
+
+  - name: Копировать манифест nginx-init-service.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/nginx-init-service.yaml"
+      dest: /tmp/nginx-init-service.yaml
+      mode: '0644'
+
+  - name: Создать pod nginx-init-service и namespace из манифеста
+    command: microk8s kubectl apply -f /tmp/nginx-init-service.yaml 
+    
   - name: Закомментировать несколько задач с помощью when
     block:  
-      - name: Копировать манифест netology-web.yaml на MicroK8s
-        copy:
-          src: "{{ playbook_dir }}/files/netology_web.yaml"
-          dest: /tmp/netology_web.yaml
-          mode: '0644'
-
-      - name: Создать pod netology-web из манифеста
-        command: microk8s kubectl apply -f /tmp/netology_web.yaml
-
-      - name: Копировать манифест service.yaml на MicroK8s
-        copy:
-          src: "{{ playbook_dir }}/files/service.yaml"
-          dest: /tmp/service.yaml
-          mode: '0644'
-
-      - name: Создать pod netology-web из манифеста
-        command: microk8s kubectl apply -f /tmp/service.yaml
-    
       - name: Остановить microk8s
         command: sudo microk8s stop
         become: yes

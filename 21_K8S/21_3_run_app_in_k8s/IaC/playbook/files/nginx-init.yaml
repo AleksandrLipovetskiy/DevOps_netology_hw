@@ -1,0 +1,30 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: new-init-ns
+---
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: nginx-init-deploy
+  namespace: new-init-ns
+spec:
+  selector:
+    matchLabels:
+      app: nginx-init
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: nginx-init
+    spec:
+      containers:
+      - name: nginx
+        image: nginx:1.25.4
+        ports:
+        - containerPort: 80
+      initContainers:
+      - name: delay
+        image: busybox
+        command: ['sh', '-c', "until nslookup nginx-init-service.$(cat /var/run/secrets/kubernetes.io/serviceaccount/namespace).svc.cluster.local; do echo waiting for nginx-init-service; sleep 3; done"]
