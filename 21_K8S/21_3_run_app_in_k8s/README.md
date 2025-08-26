@@ -65,7 +65,7 @@
   
 ![Screen_6](./Screen_6.png)  
   
-Ссылка на манифест [mnginx-init-service](./IaC/playbook/files/nginx-init-service.yaml)  
+Ссылка на манифест [nginx-init-service](./IaC/playbook/files/nginx-init-service.yaml)  
   
 Скриншот вывода наличия Service и старта приложения.  
   
