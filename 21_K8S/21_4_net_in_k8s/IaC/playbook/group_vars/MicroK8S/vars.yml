@@ -1,0 +1,15 @@
+---
+# Переменные для установки и настройки MicroK8s
+
+# Пользователь ansible
+ansible_user: ubuntu
+
+# Путь к сертификатам MicroK8s
+microk8s_certs_path: "/var/snap/microk8s/current/certs/csr.conf.template"
+
+# URL для скачивания kubectl (указана стабильная версия)
+kubectl_download_url: "https://storage.googleapis.com/kubernetes-release/release/stable.txt"
+
+# Для скрипта автодополнения kubectl
+kubectl_completion_script: "/home/{{ ansible_user }}/.kubectl-completion.sh"
+kubectl_bashrc_entry: "source {{ kubectl_completion_script }}"
