@@ -1,0 +1,220 @@
+---
+- name: Установка и настройка MicroK8s
+  hosts: MicroK8S
+  become: yes
+
+  tasks:
+  - name: Обновление списка пакетов
+    apt:
+      update_cache: yes
+
+  - name: Установка snapd
+    apt:
+      name: snapd
+      state: present
+
+  - name: Установка MicroK8s через snap
+    snap:
+      name: microk8s
+      classic: yes
+      state: present
+
+  - name: Добавить пользователя в группу microk8s
+    user:
+      name: "{{ ansible_user }}"
+      groups: microk8s
+      append: yes
+
+  - name: Изменить владельца каталога ~/.kube
+    file:
+      path: "/home/{{ ansible_user }}/.kube"
+      owner: "{{ ansible_user }}"
+      group: "{{ ansible_user }}"
+      recurse: yes
+
+  - name: Проверка наличия IP в файле без учета индекса
+    shell: grep -q "{{ item.1 }}" {{ microk8s_certs_path }}
+    register: ip_exists
+    failed_when: false
+    changed_when: false
+    with_indexed_items: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | list }}"
+
+  - name: Редактирование csr.conf.template для добавления IP из inventory в сертификат
+    lineinfile:
+      path: "{{ microk8s_certs_path }}"
+      insertbefore: '^#MOREIPS'
+      line: "IP.{{ 3 + item.0 }} = {{ item.1 }}"
+    when: ip_exists.results[ item.0 ].rc != 0
+    with_indexed_items: "{{ groups['all'] | map('extract', hostvars, ['ansible_host']) | list }}"
+    notify: Refresh microk8s certs
+
+  #- name: Включить dashboard
+  #  command: microk8s enable dashboard
+
+  - name: Проверить статус microk8s
+    command: microk8s status --wait-ready
+    register: microk8s_status
+    ignore_errors: yes
+
+  - name: Запустить microk8s если не запущен
+    command: microk8s start
+    when: microk8s_status.failed
+
+  #- name: Изменить сервис kubernetes-dashboard на NodePort с портом 30443
+  #  command: >
+  #    microk8s kubectl -n kube-system patch service kubernetes-dashboard
+  #    -p '{"spec": {"type": "NodePort", "ports": [{"port": 443, "targetPort": 443, "nodePort": 30443}]}}'
+  #  ignore_errors: yes
+
+  - name: Получить информацию о нодах в microk8s
+    command: microk8s kubectl get nodes
+    register: kubectl_nodes
+
+  - name: Показать статус нод
+    debug:
+      var: kubectl_nodes.stdout_lines
+
+  - name: Получить установленную версию kubectl
+    command: kubectl version --client --short
+    register: current_kubectl_version
+    failed_when: false
+    changed_when: false
+
+  - name: Получить последнюю стабильную версию kubectl
+    uri:
+      url: "{{ kubectl_download_url }}"
+      return_content: yes
+    register: kubectl_version # получаем и добавляем в переменную строку с актуальной версией kubectl
+  
+  - name: Установить kubectl, если версия не совпадает с текущей
+    block:
+      - name: Скачать kubectl нужной версии
+        get_url:
+          url: "https://storage.googleapis.com/kubernetes-release/release/{{ kubectl_version.content }}/bin/linux/amd64/kubectl"
+          dest: /usr/local/bin/kubectl
+          mode: '0755'
+
+      - name: Создать скрипт автодополнения kubectl
+        shell: kubectl completion bash > "{{ kubectl_completion_script }}"
+
+      - name: Добавить автодополнение kubectl и экспорт KUBECONFIG в bashrc
+        blockinfile:
+          path: /home/{{ ansible_user }}/.bashrc
+          block: |
+            {{ kubectl_bashrc_entry }}
+            export KUBECONFIG=/var/snap/microk8s/current/credentials/client.config
+          create: yes
+          marker: "# {mark} ANSIBLE MANAGED BLOCK - kubectl setup"
+    when: "'Client Version: ' + (kubectl_version.content | trim) not in current_kubectl_version.stdout"
+
+  # Запуск proxy kubernetes-dashboard не нужен, так как используется NodePort
+  #- name: Проброс порта для kubernetes-dashboard с доступом по сети
+  #  shell: microk8s kubectl port-forward -n kube-system service/kubernetes-dashboard 10443:443 --address 0.0.0.0 &
+  #  async: 10
+  #  poll: 0
+  #  ignore_errors: yes
+
+  #- name: Получить токен для доступа к Kubernetes Dashboard
+  #  command: microk8s kubectl create token default
+  #  register: dashboard_token
+
+  #- name: Отобразить токен и ссылку для доступа к Dashboard
+  #  debug:
+  #    msg: |
+  #      MicroK8s Dashboard token: {{ dashboard_token.stdout }}
+  #      Доступ к Dashboard по ссылке: https://{{ ansible_host }}:30443
+
+  - name: Проверить, включён ли Ingress-controller в MicroK8s
+    command: microk8s kubectl get ns ingress
+    register: ingress_namespace
+    ignore_errors: yes
+
+  - name: Включить Ingress-controller, если он не включён
+    command: microk8s enable ingress
+    when: ingress_namespace.rc != 0
+    register: ingress_enable_result
+    changed_when: "'Ingress is enabled' in ingress_enable_result.stdout or 'already enabled' in ingress_enable_result.stdout"
+
+  - name: Копировать манифест my-deploy-front.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/my-deploy-front.yaml"
+      dest: /tmp/my-deploy-front.yaml
+      mode: '0644'
+
+  - name: Создать pod my-deploy-front из манифеста
+    command: microk8s kubectl apply -f /tmp/my-deploy-front.yaml
+
+  - name: Копировать манифест my-deploy-back.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/my-deploy-back.yaml"
+      dest: /tmp/my-deploy-back.yaml
+      mode: '0644'
+
+  - name: Создать pod my-deploy-back из манифеста
+    command: microk8s kubectl apply -f /tmp/my-deploy-back.yaml
+
+  - name: Копировать манифест my-service.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/my-service.yaml"
+      dest: /tmp/my-service.yaml
+      mode: '0644'
+
+  - name: Создать сервис my-service из манифеста
+    command: microk8s kubectl apply -f /tmp/my-service.yaml
+
+  #- name: Копировать манифест multi-pod.yaml на MicroK8s
+  #  copy:
+  #    src: "{{ playbook_dir }}/files/multi-pod.yaml"
+  #    dest: /tmp/multi-pod.yaml
+  #    mode: '0644'
+
+  #- name: Создать pod multi-pod из манифеста
+  #  command: microk8s kubectl apply -f /tmp/multi-pod.yaml
+
+  - name: Копировать манифест ingress.yaml на MicroK8s
+    copy:
+      src: "{{ playbook_dir }}/files/ingress.yaml"
+      dest: /tmp/ingress.yaml
+      mode: '0644'
+
+  - name: Создать ingress из манифеста
+    command: microk8s kubectl apply -f /tmp/ingress.yaml
+
+  #- name: Копировать манифест nginx-init-service.yaml на MicroK8s
+  #  copy:
+  #    src: "{{ playbook_dir }}/files/nginx-init-service.yaml"
+  #    dest: /tmp/nginx-init-service.yaml
+  #    mode: '0644'
+
+  #- name: Создать pod nginx-init-service и namespace из манифеста
+  #  command: microk8s kubectl apply -f /tmp/nginx-init-service.yaml 
+    
+  - name: Закомментировать несколько задач с помощью when
+    block:  
+      - name: Остановить microk8s
+        command: sudo microk8s stop
+        become: yes
+
+      - name: Запустить microk8s
+        command: sudo microk8s start
+        become: yes
+    when: false
+
+  - name: Вывести команду для подключения по SSH к каждому хосту
+    debug:
+      msg: "ssh ubuntu@{{ ansible_host }}"
+
+  handlers:
+    - name: Refresh microk8s certs
+      command: microk8s refresh-certs --cert front-proxy-client.crt
+      register: refresh_result
+      changed_when: "'Created new certificates' in refresh_result.stdout"
+      notify: Wake up microk8s
+
+    - name: Wake up microk8s
+      command: snap set microk8s dummy="$(date)"
+      when: refresh_result is defined and refresh_result.changed
+    
+    # на подумать
+    - name: Restart microk8s
+      command: microk8s stop && microk8s start  
