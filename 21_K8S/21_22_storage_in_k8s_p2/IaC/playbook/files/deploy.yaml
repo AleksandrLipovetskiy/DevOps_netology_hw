@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: my-deployment
+  labels:
+    app: shared-volume
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: shared-volume
+  template:
+    metadata:
+      labels:
+        app: shared-volume
+    spec:
+      containers:
+      - name: busybox
+        image: busybox:latest
+        command: ["/bin/sh", "-c"]
+        args: ["while true; do echo $(date) >> /shared-data/log.txt; sleep 10; done"]
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /shared-data
+      - name: multitool
+        image: wbitt/network-multitool:latest
+        volumeMounts:
+        - name: shared-volume
+          mountPath: /shared-data
+      volumes:
+      - name: shared-volume
+        persistentVolumeClaim:
+          claimName: my-pvc
