@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: https-html-content
+data:
+  index.html: |
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <title>HW Lipovetskiy</title>
+    </head>
+    <body>
+        <h1>Netology HW Lipovetskiy</h1>
+        <p> Hello World...</p>
+    </body>
+    </html>
