@@ -173,6 +173,8 @@
       - deploy.yaml
       - pv.yaml
       - pvc.yaml
+      - deploy-nfs.yaml
+      - pvc-nfs.yaml
 
   - name: Извлечь имя ноды из вывода (вторая строка, первый столбец)
     set_fact:
@@ -190,6 +192,11 @@
       - deploy.yaml
       - pv.yaml
       - pvc.yaml
+      - deploy-nfs.yaml
+      - pvc-nfs.yaml
+
+  - name: Включить storage в MicroK8s
+    command: microk8s enable storage
 
   - name: Закомментировать несколько задач с помощью when
     block:  
