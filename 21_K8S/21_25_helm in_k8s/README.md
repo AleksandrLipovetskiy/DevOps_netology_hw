@@ -33,8 +33,8 @@
   
 ![Screen_1](./Screen_1.png)  
   
-Тут за кадром я перенес файлы values.yaml и Chart.yaml из ./templates в ./ (директорию чарта).
-
+Тут за кадром я перенес файлы values.yaml и Chart.yaml из ./templates в ./ (директорию чарта).  
+  
 ![Screen_2](./Screen_2.png)  
   
 ## Задание 2. Запустить две версии в разных неймспейсах  
