@@ -1,0 +1,21 @@
+
+frontend:
+  name: web
+  replicas: 3
+  containers:
+    name: nginx
+    image: nginx
+    tag: 1.28.1
+  port: 80
+
+backend:
+  name: back
+  replicas: 1
+  containers:
+    name: multitool
+    image: wbitt/network-multitool
+    port: 8080
+    
+service:
+  name: service
+  enabled: true

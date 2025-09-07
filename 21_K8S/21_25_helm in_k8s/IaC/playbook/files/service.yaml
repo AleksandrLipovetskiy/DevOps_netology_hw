@@ -1,0 +1,23 @@
+{{ if .Values.service.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.frontend.name }}-{{ .Values.service.name}}
+spec:
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.frontend.name }}
+  ports:
+  - port: {{ .Values.frontend.port }}
+    targetPort: {{ .Values.frontend.port }}
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-{{ .Values.backend.name }}-{{ .Values.service.name}}
+spec:
+  selector:
+    app: {{ .Release.Name }}-{{ .Values.backend.name }}
+  ports:
+  - port: {{ .Values.backend.containers.port }}
+    targetPort: {{ .Values.backend.containers.port }}
+{{ end }}
