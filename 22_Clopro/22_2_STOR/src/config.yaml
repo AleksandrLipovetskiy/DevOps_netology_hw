@@ -1,0 +1,23 @@
+#cloud-config
+write_files:
+  - path: /var/www/html/index.html
+    content: |
+      <html>
+      <body>
+        <h1>Welcome to LAMP</h1>
+        <p>This is a student page of the course Netology.</p>
+        <img src="https://storage.yandexcloud.net/lipovetskiy20250911/my_image.png" alt="Image">
+      </body>
+      </html>
+    owner: www-data:www-data
+    permissions: '0644'
+runcmd:
+  - systemctl restart apache2
+  - systemctl enable apache2
+users:
+  - name: ${ssh_user}
+    groups: sudo
+    shell: /bin/bash
+    sudo: 'ALL=(ALL) NOPASSWD:ALL'
+    ssh_authorized_keys:
+      - ${ssh_public_key}
